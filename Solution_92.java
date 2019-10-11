@@ -26,8 +26,14 @@ class Solution {
     private boolean stop;
     private ListNode left;
 
+    /**
+     * @param right 右指针
+     * @param m 左指针距离要求区间的起始点的距离+1
+     * @param n 右指针距离要求区间的结束点的距离+1
+     */
     public void recurseAndReverse(ListNode right, int m, int n) {
-
+        
+        //右指针到达终点，开始回溯
         if ( n == 1 )
             return;
 
