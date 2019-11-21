@@ -13,7 +13,10 @@
 说明：
 如果你可以只使用 O(n) 的额外空间（n 为三角形的总行数）来解决这个问题，那么你的算法会很加分。
  */
-
+/*
+自上向下递归 会超时
+自上向下记忆化搜索 用数组保存已找到的最短路径长
+ */
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,22 +38,24 @@ class Solution {
         System.out.println(solution.minimumTotal(triangle));
     }
 
-    private int answer = 2147483647;
+    private int row;
+    private Integer[][] memo;
 
     public int minimumTotal(List<List<Integer>> triangle) {
-        if ( triangle.size() == 0 ) return 0;
-        if ( triangle.size() == 1 ) return triangle.get(0).get(0);
-        solve(triangle, 1, triangle.get(0).get(0), 0);
-        return answer;
+        row = triangle.size();
+        memo = new Integer[row][row];
+        return helper(0, 0, triangle);
     }
 
-    private void solve(List<List<Integer>> triangle, int floor, int cur, int pre) {
-        if ( floor == triangle.size() ) {
-            answer = Math.min(answer, cur);
-            return;
+    private int helper(int level, int c, List<List<Integer>> triangle) {
+        if (memo[level][c] != null) {
+            return memo[level][c];
         }
-        if ( answer < cur ) return ;
-        solve(triangle, floor+1, cur+triangle.get(floor).get(pre), pre);
-        solve(triangle, floor+1, cur+triangle.get(floor).get(pre+1), pre+1);
+        if (level == row - 1) {
+            return memo[level][c] = triangle.get(level).get(c);
+        }
+        int left = helper(level + 1, c, triangle);
+        int right = helper(level+1, c + 1, triangle);
+        return memo[level][c] = Math.min(left, right) + triangle.get(level).get(c);
     }
 }
