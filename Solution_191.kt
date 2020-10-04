@@ -31,14 +31,31 @@ package com.zyflool.kotlin
 fun main(args: Array<String>) {
     println(hammingWeight(13))
 }
-
+/**
+ * 不再检查数字的每一个位，而是不断把数字最后一个 1 反转，并把答案加一。
+ * 当数字变成 0 的时候偶，我们就知道它没有 1 的位了，此时返回答案。
+ *
+ * 这里关键的想法是对于任意数字 n ，将 n 和 n−1 做与运算，会把最后一个 1 的位变成 0 。
+ * 为什么？考虑 n 和 n−1 的二进制表示。
+ * 在二进制表示中，数字 n 中最低位的 1 总是对应 n−1 中的 0 。因此，将 n 和 n−1 与运算总是能把 n 中最低位的 1 变成 0 ，并保持其他位不变。
+ */
 fun hammingWeight(n:Int):Int {
-    var bits = 0
-    var mask = 1
-    for ( i in 0..31) {
-        if ( n.and(mask) != 0)
-            bits++
-        mask = mask.shl(1)
+    var sum = 0
+    var m = n
+    while (m != 0) {
+        sum++
+        m = m.and(m-1)
     }
-    return bits
+    return sum
 }
+//
+//fun hammingWeight(n:Int):Int {
+//    var bits = 0
+//    var mask = 1
+//    for ( i in 0..31) {
+//        if ( n.and(mask) != 0)
+//            bits++
+//        mask = mask.shl(1)
+//    }
+//    return bits
+//}
