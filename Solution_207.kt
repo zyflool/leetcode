@@ -1,5 +1,8 @@
 package com.zyflool.kotlin
 
+import java.util.*
+import kotlin.collections.ArrayList
+
 /*
 207. 课程表
 你这个学期必须选修 numCourse 门课程，记为 0 到 numCourse-1 。
@@ -23,12 +26,33 @@ package com.zyflool.kotlin
 */
 
 fun main(args: Array<String>) {
-    val prerequisites = Array<IntArray>(2){ intArrayOf(1,0)}
-    prerequisites[0] = intArrayOf(1,0)
-    prerequisites[1] = intArrayOf(0,1)
-    println(canFinish(2, prerequisites))
+    val prerequisites = Array<IntArray>(2) { intArrayOf(1, 0) }
+    prerequisites[0] = intArrayOf(1, 0)
+    prerequisites[1] = intArrayOf(2, 1)
+    println(canFinish(3, prerequisites))
 }
 
 fun canFinish(numCourses: Int, prerequisites: Array<IntArray>): Boolean {
-    
+    var num = numCourses
+    val indegrees = IntArray(numCourses) { 0 }
+    val adjacency = ArrayList<ArrayList<Int>>()
+    val queue = LinkedList<Int>()
+    for (i in 0 until numCourses)
+        adjacency.add(ArrayList())
+    for (i in prerequisites.indices) {
+        indegrees[prerequisites[i][0]]++
+        adjacency[prerequisites[i][1]].add(prerequisites[i][0])
+    }
+    for (i in 0 until numCourses)
+        if (indegrees[i] == 0)
+            queue.add(i)
+    while (!queue.isEmpty()) {
+        val pre = queue.poll()
+        num--
+        adjacency[pre].forEach {
+            if (--indegrees[it] == 0)
+                queue.add(it)
+        }
+    }
+    return num == 0
 }
